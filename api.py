@@ -59,24 +59,16 @@ def upload():
     data = request.get_json()
     img = data.get('img')
     text = data.get('text')
-    
     if not img or not text:
         return jsonify({"error": "не заполнены поля"}), 400
-    
     data = read_json(filename)
-    
     tmp = 1
     for key in data.keys():
         if int(key) >= tmp:
             tmp = int(key) + 1
-    
     data[str(tmp)]={"img":img,"text":text}
-    
     write_json(data,filename)
-    
     data = read_json(filename)
-    
-    
     return jsonify({"message": "успех"}), 200
 
 
@@ -85,13 +77,23 @@ def delete():
     request2 = request.get_json()
     img = request2.get('img')
     text = request2.get('text')
-    
     for key,value in data.items():
         if(value["img"]==img and value["text"]==text):
             data.pop(key)
             write_json(data,filename)
             return jsonify({"message": "удалено успешно"}), 200
-        
+    return jsonify({"message": "внутренняя ошибка"}), 500
+
+@app.route('/api/admin/edit', methods=['POST'])
+def edit():
+    request2 = request.get_json()
+    img = request2.get('img')
+    text = request2.get('text')
+    for key,value in data.items():
+        if(value["img"]==img and value["text"]==text):
+            data.pop(key)
+            write_json(data,filename)
+            return jsonify({"message": "редактировано успешно"}), 200
     return jsonify({"message": "внутренняя ошибка"}), 500
 
 #POST-------------------------------------------------------------------------------------------------------------------
